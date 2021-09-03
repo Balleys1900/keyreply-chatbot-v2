@@ -1,19 +1,29 @@
+import checkLogin from '@/middleware/auth';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Login',
+    component: () => import('@/views/Auth.vue')
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/dash-board',
+    name: 'DashBoard',
+    beforeEnter: checkLogin,
+    component: () => import('../views/DashBoard.vue'),
+    children: [
+      {
+        // when /dash-board/user is matched
+        path: 'user',
+        component: () => import('@/components/UserComponent.vue')
+      },
+      {
+        // when /dash-board/chat-bot is matched
+        path: 'chat-bot',
+        component: () => import('@/components/ChatBot.vue')
+      }
+    ]
   }
 ];
 
