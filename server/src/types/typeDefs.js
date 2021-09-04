@@ -54,12 +54,18 @@ const typeDefs = gql`
         language:[LanguageInput]
     }
     
+    type Notification {
+    message: String
+    }
+    
     type Query{
     getContentByName(name: String): Content
     }
     
     type Mutation {
     createContent(content: ContentInput): Content
+    updateContent(id:ID ,content: ContentInput): Content
+    deleteContent(id:ID ): Notification
     }
 `;
 
