@@ -5,23 +5,13 @@ const express = require('express');
 const http = require('http');
 const port = process.env.PORT;
 const db = require('./config/database.ts');
+const typeDefs = require('./types/typeDefs');
+const resolvers = require('./resolvers/resolvers');
 
 // Connect database
-db.connect();
+db.connect()
 
-const typeDefs = gql `
-    type Query{
-    hello: String
-    }
-`;
 
-const resolvers = {
-    Query: {
-        hello: () => {
-            return 'hello';
-        },
-    },
-};
 async function startApolloServer() {
     const app = express();
     const httpServer = http.createServer(app);
