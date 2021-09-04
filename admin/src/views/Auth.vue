@@ -1,13 +1,16 @@
 <template>
-  <div class="about">
-    <h1>This is an Auth page</h1>
+  <div class="container">
     <div v-if="!loading">
       <!-- show login when not authenticated -->
-      <button v-if="!isAuthenticated" @click="login">Log in</button>
+      <button v-if="!isAuthenticated" @click="login" class="btn-connect">Connect Chatbot!!</button>
       <!-- show logout when authenticated -->
-      <button v-else @click="logout">Log out</button>
-
-      <!-- <p>{{ typeof auth0.isAuthenticated }}</p> -->
+      <button v-if="isAuthenticated" @click="logout" class="btn-connect">Log out</button>
+    </div>
+    <div v-else>
+      <img
+        src="https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif"
+        alt="Waiting for few seconds"
+      />
     </div>
   </div>
 </template>
@@ -24,12 +27,6 @@ export default {
       auth0.loginWithRedirect();
     };
 
-    // const isAuthenticated = computed(() => auth0.isAuthenticated);
-    // console.log(isAuthenticated);
-    // const loading = computed(() => auth0.loading);
-
-    console.log({ a: isAuthenticated.value });
-
     const logout = () => {
       auth0.logout({
         returnTo: window.location.origin
@@ -39,3 +36,38 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.container {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-connect {
+  background: #ee9ca7; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #ffdde1,
+    #ee9ca7
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  font-size: 40px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.btn-connect:hover {
+  background: #000000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #434343, #000000); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #434343,
+    #000000
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: #fff;
+}
+</style>

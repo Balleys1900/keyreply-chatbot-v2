@@ -180,5 +180,6 @@ async function init(options) {
 
 export default {
   init,
-  routeGuard
+  routeGuard,
+  state
 };
