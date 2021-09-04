@@ -1,17 +1,22 @@
 // import checkLogin from '@/middleware/auth';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import Auth from '@/auth';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Login',
     component: () => import('@/views/Auth.vue')
+    // beforeEnter: (to, from, next) => {
+    //   // ...if login to dashboard
+    // }
   },
   {
     path: '/dash-board',
     name: 'DashBoard',
     // beforeEnter: checkLogin,
     component: () => import('../views/DashBoard.vue'),
+    beforeEnter: Auth.routeGuard,
     children: [
       {
         // when /dash-board/user is matched
