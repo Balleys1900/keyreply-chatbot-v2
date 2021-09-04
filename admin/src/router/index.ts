@@ -1,4 +1,4 @@
-import checkLogin from '@/middleware/auth';
+// import checkLogin from '@/middleware/auth';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/dash-board',
     name: 'DashBoard',
-    beforeEnter: checkLogin,
+    // beforeEnter: checkLogin,
     component: () => import('../views/DashBoard.vue'),
     children: [
       {

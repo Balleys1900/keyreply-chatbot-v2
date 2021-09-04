@@ -1,3 +1,3 @@
-function checkLogin() {}
+// function checkLogin() {}
 
-export default checkLogin;
+// export default checkLogin;
