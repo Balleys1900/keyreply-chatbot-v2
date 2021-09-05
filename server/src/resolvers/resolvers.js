@@ -1,8 +1,8 @@
 const Content = require('../models/Content');
 const resolvers = {
     Query: {
-        getContentByName:(_paren, {name}, _context, _info) => {
-            return Content.findOne({name});
+        getContentById: async (_paren, {id}, _context, _info) => {
+            return Content.findById(id);
         },
     },
 

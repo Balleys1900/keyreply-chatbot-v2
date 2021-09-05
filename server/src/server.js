@@ -11,19 +11,19 @@ const resolvers = require('./resolvers/resolvers');
 // Connect database
 db.connect()
 
+const app = express();
+const httpServer = http.createServer(app);
+const server = new ApolloServer({
+    typeDefs: typeDefs,
+    resolvers: resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+})
 
 async function startApolloServer() {
-    const app = express();
-    const httpServer = http.createServer(app);
-    const server = new ApolloServer({
-        typeDefs: typeDefs,
-        resolvers: resolvers,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    });
     await server.start();
     server.applyMiddleware({ app });
-    app.listen(port, () => {
-        console.log(`Example app listening at http://localhost:${port}`)
-    })
 }
 startApolloServer();
