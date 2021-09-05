@@ -1,12 +1,14 @@
 <template>
   <div>
     <h1>Test Auth</h1>
-    <p>{{ token }}</p>
+    <button @click="getAPI">Click me</button>
   </div>
 </template>
 
 <script>
 import { inject } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
   setup() {
     //    isAuthenticated: computed(() => state.isAuthenticated),
@@ -20,12 +22,14 @@ export default {
     // loginWithPopup,
     // logout
     const auth0 = inject('Auth');
-    console.log(auth0);
-    const token = auth0.getTokenSilently();
-    token.then((res) => console.log(res));
+    const store = useStore();
+    const getInfo = (payload) => store.dispatch('auth/TestFunction', payload);
+    const getAPI = async () => {
+      const token = await auth0.getTokenSilently();
+      getInfo(token);
+    };
 
-    console.log(token);
-    return { token };
+    return { getAPI };
   }
 };
 </script>
