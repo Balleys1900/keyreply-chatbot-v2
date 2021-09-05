@@ -59,7 +59,7 @@ const typeDefs = gql`
     }
     
     type Query{
-    getContentByName(name: String): Content
+    getContentById(id: ID): Content
     }
     
     type Mutation {
