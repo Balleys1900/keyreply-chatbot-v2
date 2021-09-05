@@ -173,14 +173,17 @@ export default defineComponent({
   },
   methods: {
     submitForm(formName: string) {
+      let formData;
       (this.$refs[formName] as any).validate((valid: boolean) => {
         if (valid) {
-          return this.formData;
+          formData = { ...this.formData };
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+
+      return JSON.parse(JSON.stringify(formData));
     }
   }
 });
@@ -209,8 +212,8 @@ export default defineComponent({
 
   .close-button {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     cursor: pointer;
     color: rgb(165, 163, 163);
 
