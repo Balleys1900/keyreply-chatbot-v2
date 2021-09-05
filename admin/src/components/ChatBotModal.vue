@@ -16,7 +16,7 @@
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="handleGetData">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmitForm">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -50,10 +50,13 @@ export default defineComponent({
     };
   },
   methods: {
-    handleGetData() {
+    handleSubmitForm() {
+      const enFormValues = (this.$refs.engForm as any).submitForm('formChatBot');
+      const viFormValues = (this.$refs.viForm as any).submitForm('formChatBot');
+
       const data = {
-        vi: (this.$refs.viForm as any).submitForm('formChatBot'),
-        en: (this.$refs.engForm as any).submitForm('formChatBot')
+        vi: viFormValues,
+        eng: enFormValues
       };
 
       console.log(data);
