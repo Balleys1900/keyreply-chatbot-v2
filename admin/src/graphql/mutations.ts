@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const createNodeQuery = gql`
-  mutation Mutation($createContentDto: ContentInput) {
+  mutation Mutation($createContentDto: NodeInput) {
     createContent(dto: $createContentDto) {
       content {
         name
