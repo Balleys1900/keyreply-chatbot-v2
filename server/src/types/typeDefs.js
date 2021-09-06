@@ -14,17 +14,25 @@ const typeDefs = gql`
     }
     
      type Language {
-        value:String
+        lang:String
         buttons:[Button]
         conditions:[Condition]
         text:String
         regex:String
     }
+    
+    type Node {
+        name:String,
+        language:[Language],
+        text: String
+        buttons:[Button],
+        regex:String,
+    }
    
     type Content {
-        id: ID
-        name:String
-        language:[Language]
+        content:[Node]
+        version:String
+        description:String
     }
     
     
@@ -36,37 +44,50 @@ const typeDefs = gql`
     
     input ConditionInput {
         property:String
-        value:String
+        lang:String
         operator:String
     }
     
     input LanguageInput {
-        value:String
+        lang:String
         buttons:[ButtonInput]
         conditions:[ConditionInput]
         text:String
         regex:String
     }
     
+    input NodeInput {
+       name:String
+       language:[LanguageInput]
+       text: String,
+       regex: String,
+       buttons:[ButtonInput]
+    }
+    
     input ContentInput {
-        id: ID
-        name:String
-        language:[LanguageInput]
+    content:[NodeInput]
     }
     
     type Notification {
     message: String
-    }
-    
-    type Query{
+  }
+
+  type Query {
     getContentById(id: ID): Content
+    getAll: [Content]
+  }
+
+  type Mutation {
+    createContent(dto: NodeInput): Content
+<<<<<<< HEAD
+    updateContent(id: ID, content: NodeInput): Content
+    deleteContent(name: String): Notification
+  }
+=======
+    updateContent(idContent: String ,updatedContent: ContentInput): Content
+    deleteContent(idContent: String,name:String): Notification
     }
-    
-    type Mutation {
-    createContent(content: ContentInput): Content
-    updateContent(id:ID ,content: ContentInput): Content
-    deleteContent(id:ID ): Notification
-    }
+>>>>>>> f76525a77cd664d294fa7c98f05bd19f69b7a738
 `;
 
 module.exports = typeDefs;

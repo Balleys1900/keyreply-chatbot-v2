@@ -14,4 +14,16 @@
   margin: 0;
   box-sizing: border-box !important;
 }
+
+.el-container {
+  position: relative;
+}
+
+.el-aside {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  width: fit-content;
+  height: 100vh;
+}
 </style>
