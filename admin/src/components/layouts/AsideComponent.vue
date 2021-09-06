@@ -23,12 +23,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 
 export default defineComponent({
   name: 'AsideComponent',
   props: ['isAsideCollapse'],
   setup() {
+    const auth0: any = inject('Auth');
+    const { user } = auth0;
     interface MenuItem {
       id: string;
       name: string;
@@ -47,7 +49,7 @@ export default defineComponent({
       },
       {
         id: '2',
-        name: 'Users',
+        name: `Welcome ${user.value.name}`,
         icon: 'el-icon-user',
         path: '/dash-board/user'
       },

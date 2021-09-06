@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { inject, computed } from 'vue';
+import { inject } from 'vue';
 export default {
   setup() {
     const auth0 = inject('Auth');
@@ -27,12 +27,7 @@ export default {
       auth0.loginWithRedirect();
     };
 
-    const logout = () => {
-      auth0.logout({
-        returnTo: window.location.origin
-      });
-    };
-    return { login, logout, isAuthenticated, loading };
+    return { login, isAuthenticated, loading };
   }
 };
 </script>
