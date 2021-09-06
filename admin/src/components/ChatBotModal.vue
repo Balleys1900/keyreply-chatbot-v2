@@ -5,10 +5,17 @@
     width="65%"
     :before-close="$emit('handleClose')"
   >
+    <el-form label-position="top">
+      <el-form-item label="Chat Name" prop="name">
+        <el-input v-model="chatName" placeholder="Ex: conversation_start..."></el-input>
+      </el-form-item>
+    </el-form>
+
     <el-tabs v-model="activeName">
       <el-tab-pane label="VI" name="vi">
         <chat-bot-form :lang="'vi'" ref="viForm" />
       </el-tab-pane>
+
       <el-tab-pane label="ENG" name="eng">
         <chat-bot-form :lang="'en'" ref="engForm" />
       </el-tab-pane>
@@ -24,9 +31,9 @@
 
 <script lang="ts">
 import { useMutation } from '@vue/apollo-composable';
+import { createNodeQuery } from '@/graphql/mutations';
 import { defineComponent, ref } from 'vue';
 import ChatBotForm from './ChatBotForm.vue';
-import { createNodeQuery } from '@/graphql/mutations';
 
 interface ChatFormData {
   name: string;
@@ -46,6 +53,8 @@ export default defineComponent({
 
     const activeName = ref('vi');
 
+    const chatName = ref('');
+
     const open = () => {
       dialogVisibleLocal.value = true;
     };
@@ -54,7 +63,8 @@ export default defineComponent({
       dialogVisibleLocal,
       activeName,
       open,
-      createNode
+      createNode,
+      chatName
     };
   },
   methods: {
@@ -63,12 +73,22 @@ export default defineComponent({
       const viFormValues = (this.$refs.viForm as any).submitForm('formChatBot');
 
       const data = {
-        vi: viFormValues,
-        eng: enFormValues
+        content: {
+          name: this.chatName,
+          language: [viFormValues, enFormValues]
+        },
+        version: 'v1.0.99',
+        description: 'Up up'
       };
 
       if (data) {
-        this.createNode(data);
+        this.createNode({ createContentDto: data })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     }
   }

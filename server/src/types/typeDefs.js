@@ -51,7 +51,7 @@ const typeDefs = gql`
   }
 
   input NodeInput {
-    id: String
+    name: String
     language: [LanguageInput]
   }
 

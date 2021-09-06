@@ -34,7 +34,7 @@
         <el-input v-model="search" size="mini" placeholder="Type to search" />
       </template>
       <template #default="scope">
-        <el-button size="mini" type="sucess" @click="handleEdit(scope.$index, scope.row)"
+        <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)"
           >Edit</el-button
         >
         <el-popconfirm title="Are you sure to delete this?">
