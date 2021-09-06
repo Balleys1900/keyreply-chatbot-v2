@@ -1294,6 +1294,14 @@
     "@typescript-eslint/types" "4.30.0"
     eslint-visitor-keys "^2.0.0"
 
+"@vue/apollo-composable@^4.0.0-alpha.14":
+  version "4.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@vue/apollo-composable/-/apollo-composable-4.0.0-alpha.14.tgz#6e3358fa9b815b38384d3da59b5c2b77b2b229d3"
+  integrity sha512-bIOWRGk1j+b2ebsLfwQkzqvJd1tCpHZiBF2Qe88RTLUxtypdkdSW6YpLxwJgNoRv5W55sM9WI+nP2ziv2nqBZg==
+  dependencies:
+    throttle-debounce "^2.3.0"
+    vue-demi "^0.9.1"
+
 "@vue/apollo-option@^4.0.0-alpha.14":
   version "4.0.0-alpha.14"
   resolved "https://registry.yarnpkg.com/@vue/apollo-option/-/apollo-option-4.0.0-alpha.14.tgz#edae0082d8bb26e66eefd02ed941be89c7085a17"
@@ -9720,6 +9728,11 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
+
+vue-demi@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.9.1.tgz#25d6e1ebd4d4010757ff3571e2bf6a1d7bf3de82"
+  integrity sha512-7s1lufRD2l369eFWPjgLvhqCRk0XzGWJsQc7K4q+0mZtixyGIvsK1Cg88P4NcaRIEiBuuN4q1NN4SZKFKwQswA==
 
 vue-eslint-parser@^7.0.0, vue-eslint-parser@^7.10.0:
   version "7.10.0"

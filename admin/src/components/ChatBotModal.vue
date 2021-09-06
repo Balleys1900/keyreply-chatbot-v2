@@ -23,8 +23,10 @@
 </template>
 
 <script lang="ts">
+import { useMutation } from '@vue/apollo-composable';
 import { defineComponent, ref } from 'vue';
 import ChatBotForm from './ChatBotForm.vue';
+import { createNodeQuery } from '@/graphql/mutations';
 
 interface ChatFormData {
   name: string;
@@ -35,6 +37,11 @@ interface ChatFormData {
 export default defineComponent({
   components: { ChatBotForm },
   setup() {
+    /**
+     * @params : createContentDto (Object reccive from ChatBotFrom)
+     */
+    const { mutate: createNode } = useMutation(createNodeQuery);
+
     const dialogVisibleLocal = ref(false);
 
     const activeName = ref('vi');
@@ -46,7 +53,8 @@ export default defineComponent({
     return {
       dialogVisibleLocal,
       activeName,
-      open
+      open,
+      createNode
     };
   },
   methods: {
@@ -59,7 +67,9 @@ export default defineComponent({
         eng: enFormValues
       };
 
-      console.log(data);
+      if (data) {
+        this.createNode(data);
+      }
     }
   }
 });

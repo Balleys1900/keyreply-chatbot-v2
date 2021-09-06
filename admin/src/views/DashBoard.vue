@@ -54,10 +54,6 @@ export default defineComponent({
   height: auto;
 }
 
-.el-aside {
-  width: fit-content;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
