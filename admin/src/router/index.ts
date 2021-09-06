@@ -11,6 +11,11 @@ const routes: Array<RouteRecordRaw> = [
     beforeEnter: checkLogin
   },
   {
+    path: '/Test',
+    name: 'Test',
+    component: () => import('@/views/Test.vue')
+  },
+  {
     path: '/dash-board',
     name: 'DashBoard',
     // beforeEnter: checkLogin,
