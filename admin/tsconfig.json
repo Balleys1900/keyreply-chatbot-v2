@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "target",
     "target": "esnext",
     "module": "esnext",
     "strict": true,
@@ -25,7 +26,9 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "src/constants/auth_config.js",
-    "src/auth/index.js"
+    "src/auth/index.ts",
+    "src/main.js",
+    "src/graphql/queries.js"
   ],
   "exclude": ["node_modules"]
 }
