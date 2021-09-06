@@ -29,6 +29,7 @@ const resolvers = {
       return result;
     },
 
+<<<<<<< HEAD
     updateContent: (parent, { id, content }, context, info) => {
       return Content.findByIdAndUpdate(id, { ...content }, { new: true });
     },
@@ -69,6 +70,20 @@ const resolvers = {
         message: 'Delete Content Successfully!',
       };
     },
+=======
+        updateContent: async (parent,{idContent, updatedContent}, context, info ) => {
+           return Content.findByIdAndUpdate(idContent, {...updatedContent}, {new: true});
+        },
+
+        deleteContent: async (parent,{idContent,name}, context, info ) => {
+            const record = await Content.findOne({id:idContent});
+            const updatedContent= record.content.filter(item => item.name !== name);
+            await Content.updateMany({id:idContent},{content: updatedContent});
+            return {
+                message:"Delete Content Successfully!"
+            }
+        }
+>>>>>>> f76525a77cd664d294fa7c98f05bd19f69b7a738
 
     deleteContent: async (parent, { id }, context, info) => {
       await Content.findByIdAndDelete(id);
