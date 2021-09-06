@@ -73,12 +73,8 @@ export default defineComponent({
       const viFormValues = (this.$refs.viForm as any).submitForm('formChatBot');
 
       const data = {
-        content: {
-          name: this.chatName,
-          language: [viFormValues, enFormValues]
-        },
-        version: 'v1.0.99',
-        description: 'Up up'
+        name: this.chatName,
+        language: [viFormValues, enFormValues]
       };
 
       if (data) {
