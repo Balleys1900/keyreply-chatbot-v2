@@ -14,17 +14,22 @@ const typeDefs = gql`
     }
     
      type Language {
-        value:String
+        lang:String
         buttons:[Button]
         conditions:[Condition]
         text:String
         regex:String
     }
+    
+    type Node {
+    id:String,
+    language:[Language],
+    }
    
     type Content {
-        id: ID
-        name:String
-        language:[Language]
+        content:[Node]
+        version:String
+        description:String
     }
     
     
@@ -36,22 +41,25 @@ const typeDefs = gql`
     
     input ConditionInput {
         property:String
-        value:String
+        lang:String
         operator:String
     }
     
     input LanguageInput {
-        value:String
+        lang:String
         buttons:[ButtonInput]
-        conditions:[ConditionInput]
         text:String
-        regex:String
+    }
+    
+    input NodeInput {
+       id:String
+       language:[LanguageInput]
     }
     
     input ContentInput {
-        id: ID
-        name:String
-        language:[LanguageInput]
+       content:[NodeInput]
+       version:String
+       description:String
     }
     
     type Notification {
@@ -60,10 +68,11 @@ const typeDefs = gql`
     
     type Query{
     getContentById(id: ID): Content
+    getAll: [Content]
     }
     
     type Mutation {
-    createContent(content: ContentInput): Content
+    createContent(dto: ContentInput): Content
     updateContent(id:ID ,content: ContentInput): Content
     deleteContent(id:ID ): Notification
     }
