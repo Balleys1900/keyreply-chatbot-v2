@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
-const Language = require('./Language');
-
+const Node = require('../models/Node');
 const ContentSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        require:true,
-    } ,
-    language:[Language],
+    content:[Node],
+    version:String,
+    description:String,
 });
 
 const Content= mongoose.model('content',ContentSchema);

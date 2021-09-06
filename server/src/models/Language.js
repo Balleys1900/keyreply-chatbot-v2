@@ -3,7 +3,7 @@ const Button = require('./Button.js');
 const Condition = require('./Condition');
 
 const LanguageSchema = new mongoose.Schema({
-    value:{
+    lang:{
         type:String,
         require:true,
     } ,
