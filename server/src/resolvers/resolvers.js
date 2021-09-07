@@ -1,5 +1,6 @@
 const Content = require('../models/Content');
 const { UserInputError, InternalServerError }  = require('apollo-server');
+
 const resolvers = {
     Query: {
         getContentById: async (_parent, {id}, _context, _info) => {
@@ -26,10 +27,10 @@ const resolvers = {
                 const data = await Content.findById(idContent);
                 const isExistName = data.content.filter(item => item.name === dto.name);
                 if(isExistName.length) {
-                    throw new UserInputError('Name is exist');
+                    return new UserInputError('Name is exist');
                 }
                 await Content.updateMany({ idContent }, {$push:{ content:{...dto}}});
-                return data;
+                return await Content.findById(idContent);
             }catch (e) {
                 throw new InternalServerError('Internal server error');
             }
@@ -47,8 +48,8 @@ const resolvers = {
             try {
                 const record = await Content.findOne({idContent});
                 const updatedContent= record.content.filter(item => item.name !== name);
-                await Content.updateMany({id: idContent}, {content: {...updatedContent}});
-                return record;
+                await Content.updateMany({id: idContent}, {content: updatedContent});
+                return await Content.findOne({idContent});
             } catch (e) {
                 throw new InternalServerError('Internal server error');
             }
