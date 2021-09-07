@@ -1,58 +1,76 @@
 <template>
-  <el-table :data="tableData" style="width: 100%" border>
-    <el-table-column label="Date" width="180">
-      <template #default="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.date }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column label="Name" width="180">
+  <el-table :data="filterTableDataByLang" style="width: 100%" border>
+    <el-table-column label="Chat ID" width="180">
       <template #default="scope">
         <span style="margin-left: 10px">{{ scope.row.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="Operations">
+
+    <el-table-column label="Chat Text" width="360">
       <template #default="scope">
-        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"
-          >Delete</el-button
+        <span>{{ scope.row.language?.text || '-' }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="Chat Regex">
+      <template #default="scope">
+        <el-tag type="warning">{{ scope.row.language?.regex || '-' }}</el-tag>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="Chat Buttons">
+      <template #default="scope">
+        <el-space wrap v-if="scope.row.language?.buttons.length > 0">
+          <el-tag v-for="(button, index) in scope.row.language?.buttons" :key="index">
+            {{ button?.text || '-' }}
+          </el-tag>
+        </el-space>
+        <el-tag v-else>-</el-tag>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="Operations">
+      <template #header>
+        <el-input v-model="search" size="mini" placeholder="Type to search" />
+      </template>
+      <template #default="scope">
+        <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)"
+          >Edit</el-button
         >
+        <el-popconfirm title="Are you sure to delete this?">
+          <template #reference>
+            <el-button size="mini" type="danger">Delete</el-button>
+          </template>
+        </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/runtime-core';
+import { computed, defineComponent, ref } from '@vue/runtime-core';
 
 export default defineComponent({
-  setup() {
-    const tableData = [
-      {
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      },
-      {
-        date: '2016-05-02',
-        name: 'Tep',
-        address: 'No. 189, Grove St, Los Angeles'
-      },
-      {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      },
-      {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }
-    ];
+  props: {
+    tableData: { type: Array, default: () => [], required: true },
+    lang: { type: String, required: true }
+  },
+  setup(props) {
+    const search = ref('');
 
-    return {
-      tableData
-    };
+    const filterTableDataByLang = computed(() => {
+      const { tableData, lang } = props;
+      const filterData = tableData.map((item: any) => {
+        return {
+          ...item,
+          language: item.language?.find((item: any) => item.lang === lang)
+        };
+      });
+
+      return filterData;
+    });
+
+    return { search, filterTableDataByLang };
   }
 });
 </script>

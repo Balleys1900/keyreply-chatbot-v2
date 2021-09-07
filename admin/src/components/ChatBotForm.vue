@@ -7,12 +7,7 @@
     :rules="rules"
   >
     <el-row :gutter="10">
-      <el-col :span="12">
-        <el-form-item label="Chat Name" prop="name">
-          <el-input v-model="formData.name" placeholder="Ex: conversation_start..."></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
+      <el-col :span="24">
         <el-form-item label="Chat Text" prop="text">
           <el-input v-model="formData.text" placeholder="Ex: Welcome to my store..."></el-input>
         </el-form-item>
@@ -28,11 +23,11 @@
           <div
             class="button-item list-item "
             v-for="(button, index) in formData.buttons"
-            :key="button.id"
+            :key="button.key"
           >
             <div class="button-title">
               <span>Button {{ ++index }}</span>
-              <span class="close-button" @click="deleteButton(button.id)">
+              <span class="close-button" @click="deleteButton(button.key)">
                 <i class="el-icon-close"></i>
               </span>
             </div>
@@ -99,14 +94,13 @@ export default defineComponent({
   props: ['lang'],
   setup() {
     interface FormButton {
-      id: string;
+      key: string;
       text: string;
       event: string;
       data: string;
     }
 
     interface FormData {
-      name: string;
       text: string;
       buttons: FormButton[];
     }
@@ -117,7 +111,6 @@ export default defineComponent({
     };
 
     const formData: FormData = reactive({
-      name: '',
       text: '',
       buttons: []
     });
@@ -150,7 +143,7 @@ export default defineComponent({
 
     const addButton = () => {
       formData.buttons.push({
-        id: (formData.buttons.length + 1).toString(),
+        key: (formData.buttons.length + 1).toString(),
         text: '',
         event: '',
         data: ''
@@ -158,7 +151,7 @@ export default defineComponent({
     };
 
     const deleteButton = (id: string) => {
-      formData.buttons = formData.buttons.filter((button) => button.id != id);
+      formData.buttons = formData.buttons.filter((button) => button.key != id);
     };
 
     return {
@@ -173,14 +166,17 @@ export default defineComponent({
   },
   methods: {
     submitForm(formName: string) {
+      let formData;
       (this.$refs[formName] as any).validate((valid: boolean) => {
         if (valid) {
-          return this.formData;
+          formData = { ...this.formData, lang: this.lang };
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+
+      return JSON.parse(JSON.stringify(formData));
     }
   }
 });
@@ -209,8 +205,8 @@ export default defineComponent({
 
   .close-button {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     cursor: pointer;
     color: rgb(165, 163, 163);
 

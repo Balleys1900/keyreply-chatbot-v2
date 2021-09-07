@@ -1,6 +1,6 @@
 import createAuth0Client from '@auth0/auth0-spa-js';
 import { computed, reactive, watchEffect } from 'vue';
-import { domain, client_id } from '../constants/auth_config';
+import { domain, client_id, audience } from '../constants/auth_config';
 
 let client;
 const state = reactive({
@@ -148,7 +148,7 @@ async function init(options) {
   client = await createAuth0Client({
     domain,
     client_id,
-    audience: options.audience,
+    audience,
     redirect_uri: redirectUri
   });
 

@@ -23,12 +23,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
 
 export default defineComponent({
   name: 'AsideComponent',
   props: ['isAsideCollapse'],
   setup() {
+    const auth0: any = inject('Auth');
+    const { user } = auth0;
     interface MenuItem {
       id: string;
       name: string;
@@ -47,7 +49,7 @@ export default defineComponent({
       },
       {
         id: '2',
-        name: 'Users',
+        name: `Welcome ${user.value.name}`,
         icon: 'el-icon-user',
         path: '/dash-board/user'
       },
@@ -56,12 +58,6 @@ export default defineComponent({
         name: 'Chat bot',
         icon: 'el-icon-chat-dot-square',
         path: '/dash-board/chat-bot'
-      },
-      {
-        id: '4',
-        name: 'Log out',
-        icon: 'el-icon-remove-outline',
-        path: ''
       }
     ];
     return {
@@ -73,6 +69,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.aside-menu {
+}
+
 .el-menu-vertical-demo {
   height: 100vh;
 }

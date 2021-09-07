@@ -19,8 +19,7 @@ const resolvers = {
             }
 
         }
-    },
-
+      
     Mutation: {
         createContent: async (parent,{idContent, dto}, context, info ) =>{
             try {
@@ -42,8 +41,6 @@ const resolvers = {
             }catch (e) {
                 throw new InternalServerError('Internal server error');
             }
-        },
-
         deleteContent: async (parent,{idContent,name}, context, info ) => {
             try {
                 const record = await Content.findOne({idContent});
