@@ -1,5 +1,6 @@
 const Content = require('../models/Content');
 const { UserInputError, InternalServerError } = require('apollo-server');
+
 const resolvers = {
   Query: {
     getContentById: async (_parent, { id }, _context, _info) => {
@@ -17,6 +18,7 @@ const resolvers = {
       }
     },
   },
+
   Mutation: {
     createContent: async (parent, { idContent, dto }, context, info) => {
       try {
@@ -31,6 +33,7 @@ const resolvers = {
         throw new InternalServerError('Internal server error');
       }
     },
+
     updateContent: async (parent, { idContent, updatedContent }, context, info) => {
       try {
         return Content.findByIdAndUpdate(idContent, { ...updatedContent }, { new: true });
@@ -38,14 +41,12 @@ const resolvers = {
         throw new InternalServerError('Internal server error');
       }
     },
-
     deleteContent: async (parent, { idContent, name }, context, info) => {
       try {
         const record = await Content.findOne({ idContent });
         const updatedContent = record.content.filter((item) => item.name !== name);
-        console.log(updatedContent);
-        await Content.updateMany({ id: idContent }, { content: { updatedContent } });
-        return await Content.findById(idContent);
+        await Content.updateMany({ id: idContent }, { content: updatedContent });
+        return await Content.findOne({ idContent });
       } catch (e) {
         throw new InternalServerError('Internal server error');
       }
