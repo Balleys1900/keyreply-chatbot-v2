@@ -4,7 +4,7 @@ function checkLogin(to: any, from: any, next: any) {
   if (auth.state.isAuthenticated) {
     return next({ name: 'DashBoard' });
   }
-  return next();
+  next();
 }
 
 export default checkLogin;
