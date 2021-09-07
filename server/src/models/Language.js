@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Button = require('./Button.js');
+const Button = require('./Button');
 const Condition = require('./Condition');
 
 const LanguageSchema = new mongoose.Schema({
