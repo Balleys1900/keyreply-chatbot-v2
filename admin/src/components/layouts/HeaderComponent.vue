@@ -20,7 +20,9 @@
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Show profile</el-dropdown-item>
+            <el-dropdown-item>
+              <router-link custom :to="'/dash-board/user'">Show profile </router-link>
+            </el-dropdown-item>
             <el-dropdown-item divided @click="logout" v-if="isAuthenticated"
               >Logout</el-dropdown-item
             >

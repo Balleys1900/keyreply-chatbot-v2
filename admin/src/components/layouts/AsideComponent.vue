@@ -58,12 +58,6 @@ export default defineComponent({
         name: 'Chat bot',
         icon: 'el-icon-chat-dot-square',
         path: '/dash-board/chat-bot'
-      },
-      {
-        id: '4',
-        name: 'Log out',
-        icon: 'el-icon-remove-outline',
-        path: ''
       }
     ];
     return {
