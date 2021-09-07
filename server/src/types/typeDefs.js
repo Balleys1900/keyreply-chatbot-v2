@@ -78,9 +78,9 @@ const typeDefs = gql`
     }
     
     type Mutation {
-    createContent(dto: NodeInput): Content
+    createContent(idContent:String, dto: NodeInput): Content
     updateContent(idContent: String ,updatedContent: ContentInput): Content
-    deleteContent(idContent: String,name:String): Notification
+    deleteContent(idContent: String,name:String): Content
     }
 `;
 
