@@ -73,6 +73,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.aside-menu {
+}
+
 .el-menu-vertical-demo {
   height: 100vh;
 }
