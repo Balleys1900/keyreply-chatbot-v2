@@ -37,6 +37,7 @@ import ChatBotForm from './ChatBotForm.vue';
 import { ElMessage } from 'element-plus';
 import { ChatNode } from '../types/chatbot.interface';
 import { useStore } from 'vuex';
+import recordID from '../constants/database_record_id';
 
 interface ChatFormData {
   name: string;
@@ -87,19 +88,31 @@ export default defineComponent({
           language: [viFormValues, enFormValues]
         };
 
-        this.createNode({ createContentDto: data })
+        this.createNode({
+          createContentDto: data,
+          createContentIdContent: recordID
+        })
           .then((res: any) => {
-            this.chatName = '';
-            this.dialogVisibleLocal = false;
+            this.handleResetForm();
+
             const newChatData: ChatNode[] = res?.data.createContent.content;
+            console.log(newChatData);
+
             this.setChatbotData(newChatData);
+            ElMessage.success('Created data success');
           })
           .catch((err) => {
-            console.log(err);
+            ElMessage.error(err.message);
           });
       } else {
         ElMessage.error('Please fill all fields');
       }
+    },
+    handleResetForm() {
+      this.chatName = '';
+      this.dialogVisibleLocal = false;
+      (this.$refs.engForm as any).resetForm('formChatBot');
+      (this.$refs.viForm as any).resetForm('formChatBot');
     }
   }
 });

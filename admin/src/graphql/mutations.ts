@@ -1,15 +1,15 @@
 import gql from 'graphql-tag';
 
 export const createNodeQuery = gql`
-  mutation Mutation($createContentDto: NodeInput) {
-    createContent(dto: $createContentDto) {
+  mutation Mutation($createContentIdContent: String, $createContentDto: NodeInput) {
+    createContent(idContent: $createContentIdContent, dto: $createContentDto) {
       content {
         name
         language {
           lang
           buttons {
-            text
             event
+            text
             data
           }
           conditions {
@@ -20,9 +20,39 @@ export const createNodeQuery = gql`
           text
           regex
         }
+        text
+        buttons {
+          text
+          event
+          data
+        }
+        regex
       }
-      version
-      description
+    }
+  }
+`;
+
+export const deleteNodeQuery = gql`
+  mutation DeleteContentMutation($deleteContentIdContent: String, $deleteContentName: String) {
+    deleteContent(idContent: $deleteContentIdContent, name: $deleteContentName) {
+      content {
+        name
+        language {
+          conditions {
+            property
+            value
+            operator
+          }
+          buttons {
+            text
+            event
+            data
+          }
+          lang
+          text
+          regex
+        }
+      }
     }
   }
 `;

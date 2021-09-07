@@ -175,7 +175,6 @@ export default defineComponent({
           formData = { ...this.formData, lang: this.lang };
 
           this.formData.buttons = [];
-          form.resetFields();
         } else {
           console.log('error submit!!');
           return false;
@@ -183,6 +182,10 @@ export default defineComponent({
       });
 
       return formData ? JSON.parse(JSON.stringify(formData)) : null;
+    },
+    resetForm(formName: string) {
+      const form = this.$refs[formName] as any;
+      form.resetFields();
     }
   }
 });

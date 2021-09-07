@@ -37,7 +37,10 @@
         <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)"
           >Edit</el-button
         >
-        <el-popconfirm title="Are you sure to delete this?">
+        <el-popconfirm
+          title="Are you sure to delete this?"
+          @confirm="confirmEvent(scope.$index, scope.row)"
+        >
           <template #reference>
             <el-button size="mini" type="danger">Delete</el-button>
           </template>
@@ -48,7 +51,12 @@
 </template>
 
 <script lang="ts">
+import { useMutation } from '@vue/apollo-composable';
 import { computed, defineComponent, ref } from '@vue/runtime-core';
+import { deleteNodeQuery } from '../graphql/mutations';
+import recordID from '../constants/database_record_id';
+import { useStore } from 'vuex';
+import { ChatNode } from '../types/chatbot.interface';
 
 export default defineComponent({
   props: {
@@ -56,6 +64,11 @@ export default defineComponent({
     lang: { type: String, required: true }
   },
   setup(props) {
+    const store = useStore();
+
+    const setChatbotData = (payload: ChatNode[]) =>
+      store.commit('chatbot/SET_CHATBOT_DATA', payload);
+
     const search = ref('');
 
     const filterTableDataByLang = computed(() => {
@@ -70,7 +83,25 @@ export default defineComponent({
       return filterData;
     });
 
-    return { search, filterTableDataByLang };
+    const { mutate: deleteChatNode } = useMutation(deleteNodeQuery);
+
+    const confirmEvent = (row: ChatNode) => {
+      deleteChatNode({
+        deleteContentIdContent: recordID,
+        deleteContentName: row.name
+      })
+        .then((res) => {
+          // const newChatbotData: ChatNode[] = res?.data.deleteContent.content;
+          console.log(res);
+
+          // setChatbotData(newChatbotData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    return { search, filterTableDataByLang, confirmEvent };
   }
 });
 </script>
