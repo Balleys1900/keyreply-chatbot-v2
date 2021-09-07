@@ -17,11 +17,9 @@ const resolvers = {
       }
     },
   },
-
   Mutation: {
     createContent: async (parent, { idContent, dto }, context, info) => {
       try {
-        console.log(dto);
         const data = await Content.findById(idContent);
         const isExistName = data.content.filter((item) => item.name === dto.name);
         if (isExistName.length) {
@@ -41,12 +39,13 @@ const resolvers = {
         throw new InternalServerError('Internal server error');
       }
     },
+
     deleteContent: async (parent, { idContent, name }, context, info) => {
       try {
         const record = await Content.findOne({ idContent });
         const updatedContent = record.content.filter((item) => item.name !== name);
         await Content.updateMany({ id: idContent }, { content: { ...updatedContent } });
-        return record;
+        return await Content.findOne({ idContent });
       } catch (e) {
         throw new InternalServerError('Internal server error');
       }
