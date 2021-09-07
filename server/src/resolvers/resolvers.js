@@ -44,7 +44,7 @@ const resolvers = {
       try {
         const record = await Content.findOne({ idContent });
         const updatedContent = record.content.filter((item) => item.name !== name);
-        await Content.updateMany({ id: idContent }, { content: { ...updatedContent } });
+        await Content.updateMany({ id: idContent }, { content: updatedContent });
         return await Content.findOne({ idContent });
       } catch (e) {
         throw new InternalServerError('Internal server error');

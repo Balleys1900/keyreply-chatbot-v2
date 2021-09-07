@@ -57,6 +57,7 @@ import { deleteNodeQuery } from '../graphql/mutations';
 import recordID from '../constants/database_record_id';
 import { useStore } from 'vuex';
 import { ChatNode } from '../types/chatbot.interface';
+import { ElMessage } from 'element-plus';
 
 export default defineComponent({
   props: {
@@ -85,19 +86,18 @@ export default defineComponent({
 
     const { mutate: deleteChatNode } = useMutation(deleteNodeQuery);
 
-    const confirmEvent = (row: ChatNode) => {
+    const confirmEvent = (index: number, row: ChatNode) => {
       deleteChatNode({
         deleteContentIdContent: recordID,
         deleteContentName: row.name
       })
         .then((res) => {
-          // const newChatbotData: ChatNode[] = res?.data.deleteContent.content;
-          console.log(res);
-
-          // setChatbotData(newChatbotData);
+          const newChatbotData: ChatNode[] = res?.data.deleteContent.content;
+          setChatbotData(newChatbotData);
+          ElMessage.success('Delete Successfully');
         })
         .catch((err) => {
-          console.log(err);
+          ElMessage.error(err.message);
         });
     };
 
