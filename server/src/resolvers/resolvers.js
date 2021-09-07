@@ -15,7 +15,7 @@ const resolvers = {
       console.log(args);
       const { name, language } = args.dto;
       const result = await Content.findByIdAndUpdate(
-        '6135b8f2dd9586658d37df64',
+        '6136e62e5d4036e121efee78',
         {
           $push: {
             content: {
