@@ -7,8 +7,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Login',
-    component: () => import('@/views/Auth.vue'),
-    beforeEnter: checkLogin
+    component: () => import('@/views/Auth.vue')
+    // beforeEnter: checkLogin
   },
   {
     path: '/Test',
@@ -20,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'DashBoard',
     // beforeEnter: checkLogin,
     component: () => import('../views/DashBoard.vue'),
-    beforeEnter: Auth.routeGuard,
+    // beforeEnter: Auth.routeGuard,s
     children: [
       {
         // when /dash-board/user is matched

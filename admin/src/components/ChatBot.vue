@@ -23,21 +23,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/runtime-core';
-import ChatBotModal from './ChatBotModal.vue';
 import ChatBotTable from './ChatBotTable.vue';
+import ChatBotModal from './ChatBotModal.vue';
+
+import { computed, defineComponent, ref, watch } from '@vue/runtime-core';
 import { useQuery, useResult } from '@vue/apollo-composable';
-import { getAll } from '@/graphql/queries';
+import { getAll } from '../graphql/queries';
+import { useStore } from 'vuex';
+import { ChatNode } from '../types/chatbot.interface';
 
 export default defineComponent({
   components: { ChatBotTable, ChatBotModal },
   setup() {
+    const store = useStore();
     const dialogVisible = ref(false);
-
     const langSetting = ['vi', 'en'];
-
     const activeName = ref('vi');
-
     const { result, loading } = useQuery(getAll);
 
     /**
@@ -52,13 +53,15 @@ export default defineComponent({
      *  }
      * ]
      */
-    const tableData = useResult(result, null, (data) => data.getAll[0].content);
 
-    if (!loading) {
-      console.log('no load', tableData);
-    } else {
-      console.log(result.value);
-    }
+    const setChatbotData = (payload: ChatNode[]) =>
+      store.commit('chatbot/SET_CHATBOT_DATA', payload);
+
+    watch(result, (value) => {
+      setChatbotData(value.getAll[0].content);
+    });
+
+    const tableData = computed(() => store.getters['chatbot/getChatbotData']);
 
     return {
       dialogVisible,

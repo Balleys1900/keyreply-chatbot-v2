@@ -23,11 +23,11 @@
           <div
             class="button-item list-item "
             v-for="(button, index) in formData.buttons"
-            :key="button.key"
+            :key="index"
           >
             <div class="button-title">
-              <span>Button {{ ++index }}</span>
-              <span class="close-button" @click="deleteButton(button.key)">
+              <span>Button {{ index + 1 }}</span>
+              <span class="close-button" @click="deleteButton(index)">
                 <i class="el-icon-close"></i>
               </span>
             </div>
@@ -88,13 +88,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
+import { useStore } from 'vuex';
+import { ChatNode } from '../types/chatbot.interface';
 
 export default defineComponent({
   props: ['lang'],
   setup() {
     interface FormButton {
-      key: string;
       text: string;
       event: string;
       data: string;
@@ -104,6 +105,10 @@ export default defineComponent({
       text: string;
       buttons: FormButton[];
     }
+
+    const store = useStore();
+
+    const chatbotData = computed(() => store.getters['chatbot/getChatbotData']);
 
     const rules = {
       name: [{ required: true, message: 'Please input chat name.', trigger: 'blur' }],
@@ -126,16 +131,12 @@ export default defineComponent({
       }
     ];
 
-    const nodeDatas = [
-      {
-        label: 'Node 1',
-        value: 'node1'
-      },
-      {
-        label: 'Node 2',
-        value: 'node2'
-      }
-    ];
+    const nodeDatas = chatbotData.value.map((node: ChatNode) => {
+      return {
+        label: node.name,
+        value: node.name
+      };
+    });
 
     const getFormData = () => {
       return formData;
@@ -143,15 +144,16 @@ export default defineComponent({
 
     const addButton = () => {
       formData.buttons.push({
-        key: (formData.buttons.length + 1).toString(),
         text: '',
         event: '',
         data: ''
       });
     };
 
-    const deleteButton = (id: string) => {
-      formData.buttons = formData.buttons.filter((button) => button.key != id);
+    const deleteButton = (id: number) => {
+      console.log(id);
+
+      formData.buttons.splice(id, 1);
     };
 
     return {
@@ -166,17 +168,21 @@ export default defineComponent({
   },
   methods: {
     submitForm(formName: string) {
+      const form = this.$refs[formName] as any;
       let formData;
-      (this.$refs[formName] as any).validate((valid: boolean) => {
+      form.validate((valid: boolean) => {
         if (valid) {
           formData = { ...this.formData, lang: this.lang };
+
+          this.formData.buttons = [];
+          form.resetFields();
         } else {
           console.log('error submit!!');
           return false;
         }
       });
 
-      return JSON.parse(JSON.stringify(formData));
+      return formData ? JSON.parse(JSON.stringify(formData)) : null;
     }
   }
 });
