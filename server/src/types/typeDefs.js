@@ -74,13 +74,13 @@ const typeDefs = gql`
   type Query {
     getContentById(id: ID): Content
     getAll: [Content]
-  }
-
-  type Mutation {
-    createContent(dto: NodeInput): Content
-    updateContent(idContent: String, updatedContent: ContentInput): Content
-    deleteContent(idContent: String, name: String): Notification
-  }
+    }
+    
+    type Mutation {
+    createContent(idContent:String, dto: NodeInput): Content
+    updateContent(idContent: String ,updatedContent: ContentInput): Content
+    deleteContent(idContent: String,name:String): Content
+    }
 `;
 
 module.exports = typeDefs;
