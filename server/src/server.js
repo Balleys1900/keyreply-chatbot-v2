@@ -8,23 +8,23 @@ const typeDefs = require('./types/typeDefs');
 const resolvers = require('./resolvers/resolvers');
 const cors = require('cors');
 // JWT
-// const jwt = require('express-jwt');
-// const jwksRsa = require('jwks-rsa');
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 //
 const { audience, domain, port } = process.env;
 
-// const checkJwt = jwt({
-//   secret: jwksRsa.expressJwtSecret({
-//     cache: true,
-//     rateLimit: true,
-//     jwksRequestsPerMinute: 5,
-//     jwksUri: `https://${domain}/.well-known/jwks.json`,
-//   }),
+const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://${domain}/.well-known/jwks.json`,
+  }),
 
-//   audience,
-//   issuer: `https://${domain}/`,
-//   algorithms: ['RS256'],
-// });
+  audience,
+  issuer: `https://${domain}/`,
+  algorithms: ['RS256'],
+});
 // Connect database
 db.connect();
 
