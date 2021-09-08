@@ -27,7 +27,7 @@
     },
     {
       "name": "conversation_welcome",
-      "language":[
+      "language": [
         {
           "lang": "vi",
           "text": "Chào mừng bạn đến với cửa hàng ABC",
@@ -105,8 +105,8 @@
           ],
           "regex": "san pham|danh sach"
         },
-         {
-           "lang": "en",
+        {
+          "lang": "en",
           "text": "List Items",
           "buttons": [
             {
@@ -166,31 +166,31 @@
       "language": [
         {
           "lang": "vi",
-        "text": "Mua hàng thành công",
-        "buttons": [
-          {
-            "text": "Xem sản phẩm khác",
-            "event": "goto",
-            "data": "list_items"
-          },
-          {
-            "text": "Kết thúc cuộc trò chuyện",
-            "event": "goto",
-            "data": "conversation_end"
-          }
-        ],
-        "condition": [
-          {
-            "property": "language_select",
-            "value": "vi",
-            "operator": "="
-          }
-        ],
+          "text": "Mua hàng thành công",
+          "buttons": [
+            {
+              "text": "Xem sản phẩm khác",
+              "event": "goto",
+              "data": "list_items"
+            },
+            {
+              "text": "Kết thúc cuộc trò chuyện",
+              "event": "goto",
+              "data": "conversation_end"
+            }
+          ],
+          "condition": [
+            {
+              "property": "language_select",
+              "value": "vi",
+              "operator": "="
+            }
+          ],
 
-        "regex": "mua|thanh toan"
-      },
-         {
-           "lang": "en",
+          "regex": "mua|thanh toan"
+        },
+        {
+          "lang": "en",
           "text": "Order Successful",
           "buttons": [
             {
@@ -217,8 +217,8 @@
             }
           ],
           "regex": "^buy"
-        }]
-
+        }
+      ]
     },
     {
       "name": "not_found",
@@ -288,8 +288,8 @@
 
           "regex": "ket thuc|tam biet"
         },
-         {
-           "lang": "en",
+        {
+          "lang": "en",
           "text": "See you later",
           "buttons": [],
           "condition": [
@@ -302,7 +302,6 @@
           "regex": "^(end|goodbye|stop)"
         }
       ]
-
     }
   ],
   "version": "v1.0.1",

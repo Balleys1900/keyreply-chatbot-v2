@@ -13,7 +13,7 @@ export const getAll = gql`
             event
             data
           }
-          conditions {
+          condition {
             property
             value
             operator

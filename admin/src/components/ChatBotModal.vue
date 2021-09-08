@@ -31,9 +31,13 @@
 
 <script lang="ts">
 import { useMutation } from '@vue/apollo-composable';
-import { createNodeQuery } from '@/graphql/mutations';
+import { createNodeQuery } from '../graphql/mutations';
 import { defineComponent, ref } from 'vue';
 import ChatBotForm from './ChatBotForm.vue';
+import { ElMessage } from 'element-plus';
+import { ChatNode } from '../types/chatbot.interface';
+import { useStore } from 'vuex';
+import recordID from '../constants/database_record_id';
 
 interface ChatFormData {
   name: string;
@@ -44,6 +48,8 @@ interface ChatFormData {
 export default defineComponent({
   components: { ChatBotForm },
   setup() {
+    const store = useStore();
+
     /**
      * @params : createContentDto (Object reccive from ChatBotFrom)
      */
@@ -59,12 +65,16 @@ export default defineComponent({
       dialogVisibleLocal.value = true;
     };
 
+    const setChatbotData = (payload: ChatNode[]) =>
+      store.commit('chatbot/SET_CHATBOT_DATA', payload);
+
     return {
       dialogVisibleLocal,
       activeName,
       open,
       createNode,
-      chatName
+      chatName,
+      setChatbotData
     };
   },
   methods: {
@@ -72,20 +82,39 @@ export default defineComponent({
       const enFormValues = (this.$refs.engForm as any).submitForm('formChatBot');
       const viFormValues = (this.$refs.viForm as any).submitForm('formChatBot');
 
-      const data = {
-        name: this.chatName,
-        language: [viFormValues, enFormValues]
-      };
+      if (enFormValues && viFormValues) {
+        const data = {
+          name: this.chatName,
+          language: [viFormValues, enFormValues]
+        };
 
-      if (data) {
-        this.createNode({ createContentDto: data })
-          .then((res) => {
-            console.log(res);
+        console.log(data);
+
+        this.createNode({
+          createContentDto: data,
+          createContentIdContent: recordID
+        })
+          .then((res: any) => {
+            this.handleResetForm();
+
+            const newChatData: ChatNode[] = res?.data.createContent.content;
+            console.log(newChatData);
+
+            this.setChatbotData(newChatData);
+            ElMessage.success('Created data success');
           })
           .catch((err) => {
-            console.log(err);
+            ElMessage.error(err.message);
           });
+      } else {
+        ElMessage.error('Please fill all fields');
       }
+    },
+    handleResetForm() {
+      this.chatName = '';
+      this.dialogVisibleLocal = false;
+      (this.$refs.engForm as any).resetForm('formChatBot');
+      (this.$refs.viForm as any).resetForm('formChatBot');
     }
   }
 });

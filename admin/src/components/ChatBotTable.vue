@@ -37,7 +37,10 @@
         <el-button size="mini" type="success" @click="handleEdit(scope.$index, scope.row)"
           >Edit</el-button
         >
-        <el-popconfirm title="Are you sure to delete this?">
+        <el-popconfirm
+          title="Are you sure to delete this?"
+          @confirm="confirmEvent(scope.$index, scope.row)"
+        >
           <template #reference>
             <el-button size="mini" type="danger">Delete</el-button>
           </template>
@@ -48,7 +51,13 @@
 </template>
 
 <script lang="ts">
+import { useMutation } from '@vue/apollo-composable';
 import { computed, defineComponent, ref } from '@vue/runtime-core';
+import { deleteNodeQuery } from '../graphql/mutations';
+import recordID from '../constants/database_record_id';
+import { useStore } from 'vuex';
+import { ChatNode } from '../types/chatbot.interface';
+import { ElMessage } from 'element-plus';
 
 export default defineComponent({
   props: {
@@ -56,6 +65,11 @@ export default defineComponent({
     lang: { type: String, required: true }
   },
   setup(props) {
+    const store = useStore();
+
+    const setChatbotData = (payload: ChatNode[]) =>
+      store.commit('chatbot/SET_CHATBOT_DATA', payload);
+
     const search = ref('');
 
     const filterTableDataByLang = computed(() => {
@@ -66,11 +80,31 @@ export default defineComponent({
           language: item.language?.find((item: any) => item.lang === lang)
         };
       });
-
       return filterData;
     });
 
-    return { search, filterTableDataByLang };
+    const { mutate: deleteChatNode } = useMutation(deleteNodeQuery);
+
+    const confirmEvent = (index: number, row: ChatNode) => {
+      deleteChatNode({
+        deleteContentIdContent: recordID,
+        deleteContentName: row.name
+      })
+        .then((res) => {
+          const newChatbotData: ChatNode[] = res?.data.deleteContent.content;
+          setChatbotData(newChatbotData);
+          ElMessage.success('Delete Successfully');
+        })
+        .catch((err) => {
+          ElMessage.error(err.message);
+        });
+    };
+
+    const handleEdit = (index: number, row: ChatNode) => {
+      store.commit('chatbot/SET_EDIT_NAME', row.name);
+    };
+
+    return { search, filterTableDataByLang, confirmEvent, handleEdit };
   }
 });
 </script>

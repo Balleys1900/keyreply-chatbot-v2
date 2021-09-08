@@ -16,7 +16,7 @@ const typeDefs = gql`
   type Language {
     lang: String
     buttons: [Button]
-    conditions: [Condition]
+    condition: [Condition]
     text: String
     regex: String
   }
@@ -38,19 +38,19 @@ const typeDefs = gql`
   input ButtonInput {
     text: String
     event: String
-    data: String
+    data: String #ButtonDataInput
   }
 
   input ConditionInput {
     property: String
-    lang: String
+    value: String
     operator: String
   }
 
   input LanguageInput {
     lang: String
     buttons: [ButtonInput]
-    conditions: [ConditionInput]
+    condition: [ConditionInput]
     text: String
     regex: String
   }
@@ -74,13 +74,13 @@ const typeDefs = gql`
   type Query {
     getContentById(id: ID): Content
     getAll: [Content]
-    }
-    
-    type Mutation {
-    createContent(idContent:String, dto: NodeInput): Content
-    updateContent(idContent: String ,updatedContent: ContentInput): Content
-    deleteContent(idContent: String,name:String): Content
-    }
+  }
+
+  type Mutation {
+    createContent(idContent: String, dto: NodeInput): Content
+    updateContent(idContent: String, updatedContent: ContentInput): Content
+    deleteContent(idContent: String, name: String): Content
+  }
 `;
 
 module.exports = typeDefs;
