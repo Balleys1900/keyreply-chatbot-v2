@@ -88,6 +88,8 @@ export default defineComponent({
           language: [viFormValues, enFormValues]
         };
 
+        console.log(data);
+
         this.createNode({
           createContentDto: data,
           createContentIdContent: recordID

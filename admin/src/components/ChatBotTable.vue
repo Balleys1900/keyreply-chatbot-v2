@@ -80,7 +80,6 @@ export default defineComponent({
           language: item.language?.find((item: any) => item.lang === lang)
         };
       });
-
       return filterData;
     });
 
@@ -101,7 +100,11 @@ export default defineComponent({
         });
     };
 
-    return { search, filterTableDataByLang, confirmEvent };
+    const handleEdit = (index: number, row: ChatNode) => {
+      store.commit('chatbot/SET_EDIT_NAME', row.name);
+    };
+
+    return { search, filterTableDataByLang, confirmEvent, handleEdit };
   }
 });
 </script>

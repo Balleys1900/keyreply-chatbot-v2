@@ -5,7 +5,7 @@ export interface ChatNode {
 
 export interface Language {
   buttons: any[];
-  conditions: any[];
+  condition: any[];
   lang: string;
   regex: string;
   text: string;

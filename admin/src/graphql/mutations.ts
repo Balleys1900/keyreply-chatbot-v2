@@ -12,7 +12,7 @@ export const createNodeQuery = gql`
             text
             data
           }
-          conditions {
+          condition {
             property
             value
             operator
@@ -38,7 +38,7 @@ export const deleteNodeQuery = gql`
       content {
         name
         language {
-          conditions {
+          condition {
             property
             value
             operator

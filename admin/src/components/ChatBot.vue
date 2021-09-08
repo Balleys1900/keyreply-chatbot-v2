@@ -63,6 +63,8 @@ export default defineComponent({
 
     const tableData = computed(() => store.getters['chatbot/getChatbotData']);
 
+    console.log(result);
+
     return {
       dialogVisible,
       activeName,
