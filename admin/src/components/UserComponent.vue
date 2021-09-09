@@ -2,36 +2,16 @@
   <el-container>
     <el-aside>
       <el-scrollbar max-height="400px">
-        <div class="user">
-          <div class="name-user">User-1</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-2</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-3</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-4</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-5</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-5</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-5</div>
-          <div class="status">Status</div>
-        </div>
-        <div class="user">
-          <div class="name-user">User-5</div>
+        <div
+          class="user"
+          v-for="user in listUsers"
+          :key="user.id"
+          @click="handleUserActive(user.id)"
+          :class="{
+            isActive: user.id === getCurUser
+          }"
+        >
+          <div class="name-user">{{ user.username }}</div>
           <div class="status">Status</div>
         </div>
       </el-scrollbar>
@@ -39,34 +19,20 @@
     <el-container class="container">
       <el-header>
         <div class="currentUser">
-          <div class="name-user">Welcome to User-1</div>
+          <div class="name-user">Welcome to User{{ curHistory.id }}</div>
           <el-icon class="el-icon-more"></el-icon>
         </div>
       </el-header>
-      <el-main>
-        <div class="is-user">
-          <el-icon class="el-icon-user" color="#409EFC"> </el-icon>
-          <div class="text">User chat 1</div>
-        </div>
-        <div class="is-admin">
-          <el-icon color="#409EFC" class="el-icon-user-solid"> </el-icon>
-          <div class="text">Admin rep 1</div>
-        </div>
-        <div class="is-user">
-          <el-icon class="el-icon-user" color="#409EFC"> </el-icon>
-          <div class="text">User chat again 2</div>
-        </div>
-        <div class="is-admin">
-          <el-icon color="#409EFC" class="el-icon-user-solid"> </el-icon>
-          <div class="text">Admin rep again 2</div>
-        </div>
-        <div class="is-user">
-          <el-icon class="el-icon-user" color="#409EFC"> </el-icon>
-          <div class="text">User chat again again 3</div>
-        </div>
-        <div class="is-admin">
-          <el-icon color="#409EFC" class="el-icon-user-solid"> </el-icon>
-          <div class="text">Admin rep again again 3</div>
+      <el-main v-for="chat in curHistory.history" :key="chat.id">
+        <div
+          :class="{
+            isUser: chat.id === 'is-user',
+            isAdmin: chat.id === 'is-admin'
+          }"
+        >
+          <el-icon v-if="chat.id === 'is-user'" class="el-icon-user" color="#409EFC"> </el-icon>
+          <el-icon v-else class="el-icon-user-solid" color="#409EFC"> </el-icon>
+          <div class="text">{{ chat.text }}</div>
         </div>
       </el-main>
       <el-footer>
@@ -87,9 +53,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/runtime-core';
+import { computed, defineComponent, watch, reactive } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+export default defineComponent({
+  setup() {
+    const store = useStore();
 
-export default defineComponent({});
+    const getUsersAndHistory = () => {
+      store.dispatch('userChatbot/getListUser');
+      store.dispatch('userChatbot/getChatAdminHistory');
+    };
+    getUsersAndHistory();
+
+    const listUsers = computed(() => store.getters['userChatbot/getUsers']);
+    const listHistory = computed(() => store.getters['userChatbot/getChatAdminHistory']);
+
+    const setCurrentUser = (payload: any) =>
+      store.commit('userChatbot/SET_CUR_USER_ACTIVE', payload);
+
+    setCurrentUser(1);
+
+    const getCurUser = computed(() => store.getters['userChatbot/getCurUserActive']);
+
+    // console.log(listHistory.value);
+
+    const curHistory = computed(() => {
+      return listHistory.value.find((his: any) => his.id === getCurUser.value);
+    });
+
+    // watch(getCurUser, (value) => {
+    // });
+
+    const handleUserActive = (payload: any) => {
+      setCurrentUser(payload);
+    };
+    return { listUsers, handleUserActive, getCurUser, curHistory };
+  }
+});
 </script>
 
 <style scoped>
@@ -141,7 +141,7 @@ export default defineComponent({});
   background-color: #d3dce6;
   cursor: pointer;
 }
-.user:active {
+.isActive {
   background-color: #409eff;
 }
 
@@ -181,26 +181,26 @@ export default defineComponent({});
   cursor: pointer;
 }
 
-.is-admin {
+.isAdmin {
   display: flex;
   gap: 20px;
   flex-direction: row-reverse;
   margin-bottom: 10px;
   align-items: center;
 }
-.is-admin .text {
+.isAdmin .text {
   background: #409eff;
   padding: 10px;
   border-radius: 20px;
 }
-.is-user {
+.isUser {
   gap: 20px;
   display: flex;
   margin-bottom: 10px;
   align-items: center;
   /* justify-content: flex-end; */
 }
-.is-user .text {
+.isUser .text {
   background-color: #ddd;
   padding: 10px;
   border-radius: 20px;
