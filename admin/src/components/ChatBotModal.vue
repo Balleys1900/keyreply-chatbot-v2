@@ -3,27 +3,45 @@
     title="Create new chat"
     v-model="dialogVisibleLocal"
     width="65%"
-    :before-close="$emit('handleClose')"
+    :before-close="onModalClose"
+    :destroy-on-close="true"
   >
     <el-form label-position="top">
       <el-form-item label="Chat Name" prop="name">
-        <el-input v-model="chatName" placeholder="Ex: conversation_start..."></el-input>
+        <el-input
+          v-model="chatNameInput"
+          :value="chatName"
+          :disabled="editMode"
+          placeholder="Ex: conversation_start..."
+        ></el-input>
       </el-form-item>
     </el-form>
 
     <el-tabs v-model="activeName">
       <el-tab-pane label="VI" name="vi">
-        <chat-bot-form :lang="'vi'" ref="viForm" />
+        <chat-bot-form
+          :lang="'vi'"
+          ref="viForm"
+          :chatNode="chatNodeEditData"
+          :editMode="editMode"
+        />
       </el-tab-pane>
 
       <el-tab-pane label="ENG" name="eng">
-        <chat-bot-form :lang="'en'" ref="engForm" />
+        <chat-bot-form
+          :lang="'en'"
+          ref="engForm"
+          :chatNode="chatNodeEditData"
+          :editMode="editMode"
+        />
       </el-tab-pane>
     </el-tabs>
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="handleSubmitForm">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmitForm">{{
+          editMode ? 'Edit' : 'Confirm'
+        }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -32,22 +50,18 @@
 <script lang="ts">
 import { useMutation } from '@vue/apollo-composable';
 import { createNodeQuery } from '../graphql/mutations';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import ChatBotForm from './ChatBotForm.vue';
 import { ElMessage } from 'element-plus';
 import { ChatNode } from '../types/chatbot.interface';
 import { useStore } from 'vuex';
 import recordID from '../constants/database_record_id';
 
-interface ChatFormData {
-  name: string;
-  text: string;
-  button: [];
-}
-
 export default defineComponent({
   components: { ChatBotForm },
-  setup() {
+  props: ['editMode', 'editName'],
+  emits: ['handleClose'],
+  setup(props, { emit }) {
     const store = useStore();
 
     /**
@@ -59,22 +73,48 @@ export default defineComponent({
 
     const activeName = ref('vi');
 
-    const chatName = ref('');
+    const chatNameInput = ref('');
+
+    const chatName = computed(() => {
+      if (props.editName.length > 0) {
+        return props.editName;
+      }
+      return chatNameInput;
+    });
+
+    const chatNodeEditData = computed(() => store.getters['chatbot/getChatNodeEditData']);
 
     const open = () => {
       dialogVisibleLocal.value = true;
     };
 
+    const close = () => {
+      dialogVisibleLocal.value = false;
+      chatNameInput.value = '';
+    };
+
     const setChatbotData = (payload: ChatNode[]) =>
       store.commit('chatbot/SET_CHATBOT_DATA', payload);
+
+    const updateChatbotData = (payload: any) =>
+      store.commit('chatbot/UPDATE_CHATBOT_DATA', payload);
+
+    const onModalClose = () => {
+      emit('handleClose');
+    };
 
     return {
       dialogVisibleLocal,
       activeName,
       open,
+      close,
       createNode,
+      chatNameInput,
       chatName,
-      setChatbotData
+      setChatbotData,
+      updateChatbotData,
+      onModalClose,
+      chatNodeEditData
     };
   },
   methods: {
@@ -82,30 +122,32 @@ export default defineComponent({
       const enFormValues = (this.$refs.engForm as any).submitForm('formChatBot');
       const viFormValues = (this.$refs.viForm as any).submitForm('formChatBot');
 
+      console.log(viFormValues);
+
       if (enFormValues && viFormValues) {
         const data = {
-          name: this.chatName,
+          name: this.chatName.value,
           language: [viFormValues, enFormValues]
         };
 
-        console.log(data);
-
-        this.createNode({
-          createContentDto: data,
-          createContentIdContent: recordID
-        })
-          .then((res: any) => {
-            this.handleResetForm();
-
-            const newChatData: ChatNode[] = res?.data.createContent.content;
-            console.log(newChatData);
-
-            this.setChatbotData(newChatData);
-            ElMessage.success('Created data success');
+        if (!this.editMode) {
+          this.createNode({
+            createContentDto: data,
+            createContentIdContent: recordID
           })
-          .catch((err) => {
-            ElMessage.error(err.message);
-          });
+            .then((res: any) => {
+              this.handleResetForm();
+              const newChatData: ChatNode[] = res?.data.createContent.content;
+              this.setChatbotData(newChatData);
+              ElMessage.success('Created data success');
+            })
+            .catch((err) => {
+              ElMessage.error(err.message);
+            });
+        } else {
+          this.updateChatbotData({ name: this.chatName, language: data.language });
+          this.handleResetForm();
+        }
       } else {
         ElMessage.error('Please fill all fields');
       }

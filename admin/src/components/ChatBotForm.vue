@@ -93,7 +93,7 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="10" style="marginBottom : 20px">
+            <el-row :gutter="10" style="marginBottom : 20px" v-if="false">
               <el-col :span="24" v-if="button.nextNodeConditionsData.conditions?.length > 0">
                 <p style="textAlign:center; marginBottom:20px">Next Node Condittions</p>
 
@@ -207,17 +207,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue';
+import { computed, ComputedRef, defineComponent, onUnmounted, reactive, watch } from 'vue';
 import { useStore } from 'vuex';
 import { ChatNode, Language } from '../types/chatbot.interface';
 import { filterChatbotDataByLang } from '../utils/filterData';
 import { FormData, ButtonData } from '../types/chatbotForm.interface';
 
 export default defineComponent({
-  props: ['lang'],
+  props: ['lang', 'chatNode', 'editMode'],
   setup(props) {
     const store = useStore();
-
     const chatbotData = computed(() => store.getters['chatbot/getChatbotData']);
 
     const rules = {
@@ -225,12 +224,16 @@ export default defineComponent({
       text: [{ required: true, message: 'Please input chat text.', trigger: 'blur' }]
     };
 
-    const formData: FormData = reactive({
-      text: '',
-      buttons: [],
-      regex: '',
-      condition: []
-    });
+    const formData: FormData = reactive(
+      props.editMode
+        ? JSON.parse(JSON.stringify(props.chatNode[props.lang]))
+        : {
+            text: '',
+            buttons: [],
+            regex: '',
+            condition: []
+          }
+    );
 
     const buttonEvents = [
       {
@@ -266,6 +269,8 @@ export default defineComponent({
     });
 
     const getFormData = () => {
+      console.log({ formData });
+
       const newButtons = formData.buttons.map((button: any) => {
         return {
           event: button.event,
