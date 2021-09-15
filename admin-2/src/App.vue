@@ -24,4 +24,19 @@
 		width: fit-content;
 		height: 100vh;
 	}
+	.el-scrollbar__wrap {
+		overflow: auto !important;
+	}
+	#nav {
+		padding: 30px;
+
+		a {
+			font-weight: bold;
+			color: #2c3e50;
+
+			&.router-link-exact-active {
+				color: #42b983;
+			}
+		}
+	}
 </style>
