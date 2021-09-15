@@ -1,4 +1,5 @@
 const Content = require('../models/Content');
+const User = require("../models/User");
 const { UserInputError, InternalServerError }  = require('apollo-server');
 
 const resolvers = {
@@ -10,6 +11,13 @@ const resolvers = {
     getAll: async () => {
       const result = await Content.find();
       return result;
+    },
+    getHistory: async (parent,{userId}, context, info) => {
+      const user = await  User.findOne({userId});
+      if(!user){
+        throw new UserInputError('User Not exist');
+      }
+      return user;
     }
   },
   Mutation: {
@@ -49,7 +57,15 @@ const resolvers = {
       const updatedContent = record.content.filter(item => item.name !== name);
       await Content.updateMany({id: idContent}, {content: updatedContent});
       return Content.findOne({idContent});
-    }
+    },
+
+    storeHistory: async (parent,{userId,chatArr}, context, info) => {
+      const user = await  User.findOneAndUpdate({userId},{...chatArr});
+      if(!user){
+        throw new UserInputError('User Not exist');
+      }
+      return user;
+    },
   }
 };
 
