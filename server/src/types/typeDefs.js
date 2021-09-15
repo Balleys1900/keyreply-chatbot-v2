@@ -45,7 +45,7 @@ const typeDefs = gql`
     name: String
     text: String
     thumb: String
-    price: Int
+    price: String
     sub_text: String
     buttons: [ButtonInput]
     condition:[ConditionInput]
@@ -63,7 +63,7 @@ const typeDefs = gql`
     
     type Mutation {
     createContent(idContent:String, dto: NodeInput): Content
-    updateContent(idContent: String ,updatedContent: ContentInput): Content
+    updateContent(idContent: String ,updatedNode: NodeInput): Content
     deleteContent(idContent: String,name:String): Content
     }
 `;

@@ -1,15 +1,15 @@
 const Content = require('../models/Content');
 const { UserInputError, InternalServerError }  = require('apollo-server');
-const covertButtondata  = require('../utils/covertButtondata');
+
 const resolvers = {
   Query: {
     getContentById: async (_parent, {id}, _context, _info) => {
       const result = await Content.findById(id);
-      return covertButtondata(result);
+      return result;
     },
     getAll: async () => {
       const result = await Content.find();
-      return covertButtondata(result[0].content);
+      return result;
     }
   },
   Mutation: {
@@ -23,8 +23,25 @@ const resolvers = {
       return Content.findById(idContent);
     },
 
-    updateContent: async (parent,{idContent, updatedContent}, context, info ) => {
-      return Content.findByIdAndUpdate(idContent, {...updatedContent}, {new: true});
+    updateContent: async (parent,{idContent, updatedNode}, context, info ) => {
+      const record = await Content.findById(idContent);
+      let isExistName = false;
+      let arrContent = [];
+      record.content.map(async node => {
+        if (node.name === updatedNode.name) {
+          isExistName = true;
+          node = {...updatedNode};
+          console.log('node',node);
+          arrContent.push(node);
+        }else {
+          arrContent.push(node);
+        }
+      });
+      console.log(arrContent);
+      if(isExistName === false){
+        throw new UserInputError('Name of node must be unique!!!');
+      }
+      return Content.findByIdAndUpdate(idContent, {content: arrContent}, {new: true});
     },
 
     deleteContent: async (parent,{idContent,name}, context, info ) => {
