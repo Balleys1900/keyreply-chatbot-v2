@@ -29,7 +29,7 @@ const routes: Array<RouteConfig> = [
 					},
 					{
 						path: 'add',
-						component: () => import('@/components/ChatBot/AddComponent.vue'),
+						component: () => import('@/components/ChatBot/FormComponent.vue'),
 					},
 				],
 			},

@@ -39,7 +39,7 @@
 					},
 					{
 						id: '2',
-						name: `Welcome Tai`,
+						name: `User`,
 						icon: 'el-icon-user',
 						path: '/dash-board/user',
 					},
