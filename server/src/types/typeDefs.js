@@ -27,6 +27,22 @@ const typeDefs = gql`
       value: String
       operator: String
   }
+
+  type Chat {
+    name: String
+    text: String
+    isBotReply: Boolean
+    isShowItem: Boolean
+    isShowList: Boolean
+    regex: String
+    buttons: [Button]
+    condition: [Condition]
+  }
+  type User{
+    userId:String
+    name:String,
+    chatArr: [Chat]
+  }
   
   
   input ButtonInput {
@@ -56,15 +72,32 @@ const typeDefs = gql`
     content: [NodeInput]
   }
   
+  input ChatInput{
+    name: String
+    text: String
+    isBotReply: Boolean
+    isShowItem: Boolean
+    isShowList: Boolean
+    regex: String
+    buttons: [ButtonInput]
+    condition: [ConditionInput]
+  }
+  
+  input chatArrInput {
+    chatArr: [ChatInput]
+  }
+  
   type Query {
-    getContentById(id: ID): Content
-    getAll: [Content]
+      getContentById(id: ID): Content
+      getAll: [Content]
+      getHistory(userId: String): User  
     }
     
     type Mutation {
-    createContent(idContent:String, dto: NodeInput): Content
-    updateContent(idContent: String ,updatedNode: NodeInput): Content
-    deleteContent(idContent: String,name:String): Content
+      createContent(idContent: String, dto: NodeInput): Content
+      updateContent(idContent: String ,updatedNode: NodeInput): Content
+      deleteContent(idContent: String,name:String): Content
+      storeHistory(userId: String, chatArr:chatArrInput): User
     }
 `;
 
