@@ -41,7 +41,7 @@
       ]
     },
     {
-      "name": "conversation_welcome",
+      "name": "conversation_welcome:vi",
       "text": "Chào mừng bạn đến với cửa hàng ABC",
       "buttons": [
         {
